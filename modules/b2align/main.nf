@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 process BOWTIE2_ALIGN {
-    //label 'process_high'
+    label 'process_high'
     container 'ghcr.io/bf528/bowtie2:latest'
 
     input:

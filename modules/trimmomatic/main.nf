@@ -2,7 +2,7 @@
 
 process TRIMMOMATIC {
     container "ghcr.io/bf528/trimmomatic:latest"
-    label "process_single"
+    label "process_low"
     publishDir params.outdir
 
     input: 

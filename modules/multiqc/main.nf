@@ -13,6 +13,6 @@ process MULTIQC {
 
     shell
     """
-    multiqc . 
+    multiqc . -f
     """
 }
