@@ -2,11 +2,12 @@
 
 process TRIMMOMATIC {
     container "ghcr.io/bf528/trimmomatic:latest"
-    label "process_low"
+    label "process_high"
     publishDir params.outdir
 
     input: 
     tuple val(sample), path(fastq)
+    path(adapters)
 
     output:
     tuple val("${sample}"), path("${sample}_trimmed.fastq.gz"), emit: trimmed 
@@ -14,6 +15,6 @@ process TRIMMOMATIC {
 
     shell:
     """
-    trimmomatic SE -threads $task.cpus -trimlog ${sample}trimming.log $fastq ${sample}_trimmed.fastq.gz ILLUMINACLIP:TruSeq3-SE:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 
+    trimmomatic SE $fastq ${sample}_trimmed.fastq.gz ILLUMINACLIP:${adapters}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 2> ${sample}_trim.log
     """
 }

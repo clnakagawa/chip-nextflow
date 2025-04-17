@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 process SAMTOOLS_FLAGSTAT {
-    label 'process_high'
+    label 'process_low'
     container 'ghcr.io/bf528/samtools:latest'
     publishDir params.outdir 
 
@@ -13,6 +13,6 @@ process SAMTOOLS_FLAGSTAT {
 
     shell:
     """ 
-    samtools flagstat -@ $task.cpus -O tsv $bam > ${sample}.flagstat.txt
+    samtools flagstat -@ $task.cpus $bam > ${sample}_flagstat.txt
     """
 }

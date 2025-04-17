@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 process SAMTOOLS_INDEX {
-    label 'process_high'
+    label 'process_single'
     container 'ghcr.io/bf528/samtools:latest'
     publishDir params.outdir, mode: 'copy'
 

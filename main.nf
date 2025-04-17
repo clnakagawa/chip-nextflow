@@ -12,6 +12,12 @@ include {BAMCOVERAGE} from "./modules/bamcoverage"
 include {BW_SUMMARY} from "./modules/bwSummary"
 include {CORR_PLOT} from "./modules/plotCorr"
 include {PEAKCALL} from "./modules/macs3"
+include {INTERSECT} from "./modules/intersect"
+include {FILTER_BLACKLIST} from "./modules/filterBlacklist"
+include {ANNOTATE_PEAKS} from "./modules/annotatePeaks"
+include {COMPUTE_MATRIX} from "./modules/computeMatrix"
+include {PLOT_PROFILE} from "./modules/plotProfile"
+include {FIND_MOTIFS} from "./modules/motifFinding"
 
 workflow {
     // get channel of fastq files from samplesheet
@@ -24,7 +30,7 @@ workflow {
     FASTQC(fa_ch)
 
     // trim fastqs
-    TRIMMOMATIC(fa_ch) 
+    TRIMMOMATIC(fa_ch, params.adapter_fa) 
 
     // build index with bowtie on referece genome
     // align reads to bowtie2 index
@@ -67,5 +73,26 @@ workflow {
     | map {meta, paths -> tuple(meta, *paths)}
     | set { macs_ch }
 
+    macs_ch 
+    | view()
+
     PEAKCALL(macs_ch)
+
+    PEAKCALL.out 
+    | map { it -> it[1] }
+    | collect( sort: true ) 
+    | set { peak_ch }
+
+    INTERSECT(peak_ch)
+    FILTER_BLACKLIST(INTERSECT.out, params.blacklist)
+    ANNOTATE_PEAKS(FILTER_BLACKLIST.out, params.genome, params.gtf)
+
+    bw_ch
+    | map { file_list -> file_list.findAll { it.name.contains('IP_') }}
+    | set { cm_ch }
+
+    COMPUTE_MATRIX(cm_ch, params.refbed)
+    PLOT_PROFILE(COMPUTE_MATRIX.out)
+
+    FIND_MOTIFS(FILTER_BLACKLIST.out, params.genome)
 }
