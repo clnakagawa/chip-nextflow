@@ -13,6 +13,6 @@ process PEAKCALL {
 
     shell:
     """
-    macs3 callpeak -t $ip -c $control -g hs -n $name --pvalue 0.05
+    macs3 callpeak -t $ip -c $control -f BAM -g hs -n $name
     """
 }

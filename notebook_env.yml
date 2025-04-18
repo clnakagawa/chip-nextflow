@@ -8,4 +8,3 @@ dependencies:
 - scanpy=1.11.1
 - celltypist=1.6.3
 - scikit-image=0.25.2
-- pybedtools=0.12.0

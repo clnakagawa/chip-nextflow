@@ -67,13 +67,14 @@ workflow {
     CORR_PLOT(BW_SUMMARY.out.summary)
 
     // peak calling with MAC3
-    SAMTOOLS_SORT.out.sorted
-    | map { meta, path -> tuple(meta.replaceFirst(/.*?_/, ''), path) }
-    | groupTuple()
-    | map {meta, paths -> tuple(meta, *paths)}
+    BOWTIE2_ALIGN.out.bam
+    | map { name, path -> tuple(name.split('_')[1], [(path.baseName.split('_')[0]): path]) }
+    | groupTuple(by: 0)
+    | map { rep, maps -> tuple(rep, maps[0] + maps[1])}
+    | map { rep, samples -> tuple(rep, samples.IP, samples.INPUT)}
     | set { macs_ch }
 
-    macs_ch 
+    macs_ch
     | view()
 
     PEAKCALL(macs_ch)

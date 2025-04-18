@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 process FIND_MOTIFS {
-    label 'process_medium'
+    label 'process_high'
     container 'ghcr.io/bf528/homer:latest'
     publishDir params.outdir 
 
@@ -11,10 +11,10 @@ process FIND_MOTIFS {
 
 
     output:
-    path("*"), emit: results
+    path("homermotifs/"), emit: results
 
     shell:
     """
-    findMotifsGenome.pl $peaks $genome $params.outdir -size given
+    findMotifsGenome.pl $peaks $genome homermotifs/ -size 200 -mask
     """
 }
