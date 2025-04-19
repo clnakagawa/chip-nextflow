@@ -5,6 +5,5 @@ channels:
 
 dependencies:
 - ipykernel=6.29.5
-- scanpy=1.11.1
-- celltypist=1.6.3
+- matplotlib-venn=1.1.2
 - scikit-image=0.25.2
